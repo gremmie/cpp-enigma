@@ -1,0 +1,7 @@
+Import('env')
+
+sources = Split("""
+   rotor.cpp
+   """)
+
+env.StaticLibrary('enigma', sources)
