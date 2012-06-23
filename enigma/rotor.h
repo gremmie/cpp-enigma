@@ -8,6 +8,7 @@
 
 #include <string>
 #include "enigma_types.h"
+#include "enigma_utils.h"
 
 
 namespace enigma
@@ -93,39 +94,82 @@ namespace enigma
       // simply for simulation convenience.
       // display.
 
-      rotor(const char* name, const char* wiring, int ring_setting = 0, const char* stepping = 0);
+      rotor(const char* name, const char* wiring, int ring_setting = 0, const char* stepping = nullptr);
 
       // Returns the rotor name:
       const std::string& name() const { return rotor_name; }
 
-      // Spin the rotor such that the string val appears in the operator window:
-      void set_display(const char* val);
+      // Spin the rotor such that the char val appears in the operator window:
+      void set_display(char val)
+      {
+         pos = display_map[val - 'A'];
+         display_val = val;
+      }
 
       // Returns what is currently being displayed in the operator window:
-      std::string get_display() const;
+      char get_display() const { return display_val; }
+
+
+      // sets the ring setting to n, where n [0-25]:
+      void set_ring_setting(int n);
+
+      // get the current ring setting:
+      int get_ring_setting() const { return ring_setting; }
 
       // Simulate a signal entering the rotor from the right at a given pin:
       // n must be an integer between 0 and 25.
       // Returns the contact number of the output signal (0-25).
-      int signal_in(int n) const;
+      int signal_in(int n) const
+      {
+         // determine what pin we have at that position due to rotation
+         const int pin = (n + pos) % 26;
+
+         // run it through the internal wiring
+         const int contact = entry_map[pin];
+
+         // turn back into a position due to rotation
+         return alpha_mod(contact - pos);
+      }
 
       // Simulate a signal entering the rotor from the left at a given contact position n.
       // n must be an integer between 0 and 25.
       // Returns the pin number of the output signal (0-25).
-      int signal_out(int n) const;
+      int signal_out(int n) const
+      {
+         // determine what contact we have at that position due to rotation
+         const int contact = (n + pos) % 26;
+
+         // run it through the internal wiring
+         const int pin = exit_map[contact];
+
+         // turn back into a position due to rotation
+         return alpha_mod(pin - pos);
+      }
 
       // Return true if this rotor has a notch in the stepping position and false otherwise:
-      bool notch_over_pawl() const;
+      bool notch_over_pawl() const
+      {
+         return step_map[display_val - 'A'];
+      }
 
       // Rotate the rotor forward one step:
-      void rotate();
+      void rotate()
+      {
+         pos = (pos + 1) % 26;
+         display_val = pos_map[pos];
+      }
 
    private:
       std::string rotor_name;
       std::string wiring_str;
       int ring_setting;
       int pos;
-      int rotations;
+      char display_val;
+      alpha_int_array entry_map;
+      alpha_int_array exit_map;
+      alpha_int_array display_map;
+      alpha_int_array pos_map;
+      alpha_bool_array step_map;
    };
 }
 

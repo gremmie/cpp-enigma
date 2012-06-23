@@ -2,6 +2,7 @@ Import('env')
 
 sources = Split("""
    rotor.cpp
+   rotor_factory.cpp
    """)
 
 env.StaticLibrary('enigma', sources)
