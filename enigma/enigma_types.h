@@ -8,6 +8,7 @@
 
 #include <exception>
 #include <string>
+#include <array>
 
 namespace enigma
 {
@@ -28,6 +29,10 @@ namespace enigma
    private:
       std::string what_arg;
    };
+
+   // Arrays of 26 items are very commonly used:
+   typedef std::array<int, 26> alpha_int_array;
+   typedef std::array<bool, 26> alpha_bool_array;
 }
 
 #endif
