@@ -1,0 +1,4 @@
+Import('env')
+
+env.CxxTest('rotor_suite', 'test_rotor.t.h')
+
