@@ -91,7 +91,7 @@ rotor::rotor(const char* name, const char* wiring, int ring_setting, const char*
 
    if (stepping != nullptr)
    {
-      for (char c = *stepping; *stepping != '\0'; ++stepping)
+      for (char c = *stepping; *stepping != '\0'; c = *(++stepping))
       {
          if (ucase_set.find(c) != ucase_set.end())
          {

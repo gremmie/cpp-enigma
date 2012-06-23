@@ -2,3 +2,5 @@ syntax: glob
 build
 .*.swp
 .sconsign.dblite
+cxxtest
+site_scons
