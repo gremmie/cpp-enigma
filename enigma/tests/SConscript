@@ -3,6 +3,7 @@ Import('env')
 env.CxxTest('test_suite', [
       'test_rotor.t.h',
       'test_plugboard.t.h',
+      'test_machine.t.h',
    ]
 )
 
