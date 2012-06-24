@@ -6,6 +6,8 @@
 //
 // enigma_utils.h - This file contains common functions used throughout Cpp-Enigma.
 
+#include <string>
+
 namespace enigma
 {
    // This version of mod acts like Python's with respect to negative dividends.
@@ -17,6 +19,9 @@ namespace enigma
       }
       return dividend % 26;
    }
+
+   // Removes spaces from a string and returns the resulting string:
+   std::string remove_spaces(const std::string& s);
 }
 
 #endif
