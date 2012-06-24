@@ -1,4 +1,8 @@
 Import('env')
 
-env.CxxTest('rotor_suite', 'test_rotor.t.h')
+env.CxxTest('test_suite', [
+      'test_rotor.t.h',
+      'test_plugboard.t.h',
+   ]
+)
 

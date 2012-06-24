@@ -18,7 +18,7 @@ using namespace enigma;
 const char* const wiring = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
 
 
-class MyTestSuite1 : public CxxTest::TestSuite
+class rotor_test_suite : public CxxTest::TestSuite
 {
 public:
 
