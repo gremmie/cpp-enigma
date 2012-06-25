@@ -1,6 +1,6 @@
 env = Environment(
    tools = ['default', 'cxxtest'],
-   CXXFLAGS='-std=c++0x -Wall -Wextra -pedantic',
+   CXXFLAGS='-std=c++0x -Wall -Wextra -pedantic -O3',
    CPPPATH='#/enigma',
    LIBS='enigma',
    LIBPATH='#/build',
