@@ -134,13 +134,17 @@ std::string plugboard::army_str() const
 
    std::string s;
 
-   for (const auto p : pairs)
+   for (const auto& p : pairs)
    {
       s += static_cast<char>(p.first + 'A');
       s += static_cast<char>(p.second + 'A');
       s += ' ';
    }
-   s.erase(s.size() - 1);     // erase trailing space
+
+   if (!s.empty())
+   {
+      s.erase(s.size() - 1);     // erase trailing space
+   }
    return s;
 }
 
@@ -151,13 +155,16 @@ std::string plugboard::navy_str() const
    const auto pairs = get_pairs();
 
    std::ostringstream os;
-   for (const auto p : pairs)
+   for (const auto& p : pairs)
    {
       os << (p.first + 1) << '/' << (p.second + 1) << ' ';
    }
 
    std::string s(os.str());
-   s.erase(s.size() - 1);     // erase trailing space
+   if (!s.empty())
+   {
+      s.erase(s.size() - 1);     // erase trailing space
+   }
    return s;
 }
 
