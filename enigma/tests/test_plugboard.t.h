@@ -307,4 +307,22 @@ public:
       }
    }
 
+   void test_unplug_all()
+   {
+      plugboard pb;
+      pb.connect(5, 7);
+      pb.connect(1, 20);
+      pb.connect(18, 24);
+      pb.unplug_all();
+      for (int i = 0; i < 26; ++i)
+      {
+         TS_ASSERT(pb.is_free(i));
+      }
+      pb.unplug_all();
+      for (int i = 0; i < 26; ++i)
+      {
+         TS_ASSERT(pb.is_free(i));
+      }
+   }
+
 };
