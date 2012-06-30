@@ -15,15 +15,12 @@ using namespace enigma;
 ////////////////////////////////////////////////////////////////////////////////
 
 enigma_machine::enigma_machine(
-      rotor_vector rv,
-      std::unique_ptr<rotor> reflector,
+      const rotor_vector& rv,
+      std::shared_ptr<rotor> reflector,
       const plugboard& pb)
- : rotors(std::move(rv)),
-   reflector(std::move(reflector)),
-   pb(pb),
-   r_rotor(0),
-   m_rotor(0),
-   l_rotor(0)
+ : rotors(rv),
+   reflector(reflector),
+   pb(pb)
 {
    rotor_count_check();
 }
@@ -31,14 +28,11 @@ enigma_machine::enigma_machine(
 ////////////////////////////////////////////////////////////////////////////////
 
 enigma_machine::enigma_machine(
-      rotor_vector rv,
-      std::unique_ptr<rotor> reflector)
- : rotors(std::move(rv)),
-   reflector(std::move(reflector)),
-   pb(),
-   r_rotor(0),
-   m_rotor(0),
-   l_rotor(0)
+      const rotor_vector& rv,
+      std::shared_ptr<rotor> reflector)
+ : rotors(rv),
+   reflector(reflector),
+   pb()
 {
    rotor_count_check();
 }
@@ -52,10 +46,7 @@ enigma_machine::enigma_machine(
       const std::string& plugboard_settings)
  : rotors(),
    reflector(create_reflector(reflector_name.c_str())),
-   pb(plugboard_settings),
-   r_rotor(0),
-   m_rotor(0),
-   l_rotor(0)
+   pb(plugboard_settings)
 {
    for (const auto& name : rotor_types)
    {
