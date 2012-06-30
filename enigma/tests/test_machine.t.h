@@ -14,6 +14,25 @@
 using namespace enigma;
 
 
+class display_suite : public CxxTest::TestSuite
+{
+public:
+
+   void test_set_display3()
+   {
+      enigma_machine m({"II", "IV", "V"}, {}, "B");
+      TS_ASSERT_THROWS(m.set_display("ABCD"), enigma_machine_error);
+      TS_ASSERT_THROWS_NOTHING(m.set_display("ABC"));
+   }
+
+   void test_set_display4()
+   {
+      enigma_machine m({"Gamma", "II", "IV", "V"}, {}, "B-Thin");
+      TS_ASSERT_THROWS(m.set_display("BCD"), enigma_machine_error);
+      TS_ASSERT_THROWS_NOTHING(m.set_display("ABCD"));
+   }
+};
+
 class stepping_test_suite : public CxxTest::TestSuite
 {
 public:
