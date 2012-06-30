@@ -4,6 +4,7 @@
 //
 // test_plugboard.t.h - Unit tests for the plugboard class.
 
+#include <algorithm>
 #include <cxxtest/TestSuite.h>
 #include "plugboard.h"
 
@@ -138,4 +139,172 @@ public:
       plugboard p{stecker};
       TS_ASSERT_EQUALS(stecker, p.navy_str());
    }
+
+   void test_get_wiring()
+   {
+      plugboard pb;
+      alpha_int_array w(pb.get_wiring());
+
+      for (int i = 0; i < 26; ++i)
+      {
+         TS_ASSERT_EQUALS(w[i], i);
+      }
+
+      pb.connect(0, 1);
+      pb.connect(8, 20);
+      pb.connect(24, 25);
+      for (int i = 0; i < 26; ++i)
+      {
+         w[i] = i;
+      }
+      std::swap(w[0], w[1]);
+      std::swap(w[8], w[20]);
+      std::swap(w[24], w[25]);
+
+      alpha_int_array w1(pb.get_wiring());
+      for (int i = 0; i < 26; ++i)
+      {
+         TS_ASSERT_EQUALS(w[i], w1[i]);
+      }
+   }
+
+   void test_set_wiring()
+   {
+      alpha_int_array w;
+      for (int i = 0; i < 26; ++i)
+      {
+         w[i] = i;
+      }
+      std::swap(w[0], w[1]);
+      std::swap(w[8], w[20]);
+      std::swap(w[24], w[25]);
+
+      plugboard pb;
+      pb.set_wiring(w);
+
+      alpha_int_array w2 = pb.get_wiring();
+      TS_ASSERT_EQUALS(w, w2);
+   }
+
+   void test_is_wired()
+   {
+      plugboard pb;
+      pb.connect(0, 25);
+      pb.connect(4, 18);
+      for (int i = 0; i < 26; ++i)
+      {
+         if (i == 0 || i == 25 || i == 4 || i == 18)
+         {
+            TS_ASSERT(pb.is_wired(i));
+         }
+         else
+         {
+            TS_ASSERT(!pb.is_wired(i));
+         }
+      }
+   }
+
+   void test_is_free()
+   {
+      plugboard pb;
+      pb.connect(0, 25);
+      pb.connect(4, 18);
+      for (int i = 0; i < 26; ++i)
+      {
+         if (i == 0 || i == 25 || i == 4 || i == 18)
+         {
+            TS_ASSERT(!pb.is_free(i));
+         }
+         else
+         {
+            TS_ASSERT(pb.is_free(i));
+         }
+      }
+   }
+
+   void test_disconnect()
+   {
+      plugboard pb;
+      pb.connect(0, 25);
+      pb.connect(4, 18);
+      pb.disconnect(0);
+      pb.disconnect(18);
+      for (int i = 0; i < 26; ++i)
+      {
+         TS_ASSERT(pb.is_free(i));
+      }
+   }
+
+   void test_disconnect2()
+   {
+      plugboard pb;
+      for (int i = 0; i < 26; ++i)
+      {
+         pb.disconnect(i);
+      }
+      for (int i = 0; i < 26; ++i)
+      {
+         TS_ASSERT(pb.is_free(i));
+      }
+   }
+
+   void test_connect()
+   {
+      plugboard pb;
+      pb.connect(2, 4);
+      pb.connect(17, 20);
+      for (int i = 0; i < 26; ++i)
+      {
+         if (i == 2 || i == 4 || i == 17 || i == 20)
+         {
+            TS_ASSERT(pb.is_wired(i));
+         }
+         else
+         {
+            TS_ASSERT(pb.is_free(i));
+         }
+      }
+      pb.connect(20, 25);
+      for (int i = 0; i < 26; ++i)
+      {
+         if (i == 2 || i == 4 || i == 25 || i == 20)
+         {
+            TS_ASSERT(pb.is_wired(i));
+         }
+         else
+         {
+            TS_ASSERT(pb.is_free(i));
+         }
+      }
+   }
+
+   void test_is_connected()
+   {
+      plugboard pb;
+      pb.connect(5, 7);
+      pb.connect(1, 20);
+      TS_ASSERT(pb.is_connected(5, 7));
+      TS_ASSERT(pb.is_connected(1, 20));
+
+      for (int i = 0; i < 26; ++i)
+      {
+         if (i == 7)
+         {
+            TS_ASSERT(pb.is_connected(5, i));
+         }
+         else
+         {
+            TS_ASSERT(!pb.is_connected(5, i));
+         }
+         if (i == 1)
+         {
+            TS_ASSERT(pb.is_connected(20, i));
+         }
+         else
+         {
+            TS_ASSERT(!pb.is_connected(20, i));
+         }
+      }
+   }
+
 };
