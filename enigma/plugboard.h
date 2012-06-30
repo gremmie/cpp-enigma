@@ -152,6 +152,15 @@ namespace enigma
          return wiring_map[x] == y && wiring_map[y] == x;
       }
 
+      // Unplugs all cables
+      void unplug_all()
+      {
+         for (auto i = 0U; i < wiring_map.size(); ++i)
+         {
+            wiring_map[i] = i;
+         }
+      }
+
    private:
       alpha_int_array wiring_map;
 
