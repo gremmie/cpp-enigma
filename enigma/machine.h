@@ -65,6 +65,25 @@ namespace enigma
          rotors[3]->set_display(c3);
       }
 
+      // Set the rotor display (starting position) using a string; the
+      // string length must match the number of rotors in use or a
+      // enigma_machine_error exception will be thrown:
+      void set_display(const std::string& val)
+      {
+         if (val.size() == 3 && rotors.size() == 3)
+         {
+            set_display(val[0], val[1], val[2]);
+         }
+         else if (val.size() == 4 && rotors.size() == 4)
+         {
+            set_display(val[0], val[1], val[2], val[3]);
+         }
+         else
+         {
+            throw enigma_machine_error("set_display invalid size");
+         }
+      }
+
       // return the rotor display (starting position) as a string
       std::string get_display() const
       {
