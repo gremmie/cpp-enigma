@@ -5,6 +5,7 @@
 // machine.cpp - The implementation file for the main Enigma machine class.
 
 #include <cstddef>
+#include <sstream>
 #include "machine.h"
 #include "rotor.h"
 #include "rotor_factory.h"
@@ -99,3 +100,22 @@ void enigma_machine::rotor_count_check()
       l_rotor = rotors[1].get();
    }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+std::string enigma_machine::str(bool army) const
+{
+   std::ostringstream os;
+
+   os << reflector->name() << ' ';
+
+   for (const auto& r : rotors)
+   {
+      os << r->name() << '/' << r->get_ring_setting() << ' ';
+   }
+
+   os << get_display() << ' ' << (army ? pb.army_str() : pb.navy_str());
+
+   return os.str();
+}
+

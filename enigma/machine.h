@@ -126,6 +126,12 @@ namespace enigma
       // for access to the plugboard for hill-climbing, etc
       plugboard& get_plugboard() { return pb; }
 
+      // Returns a string representation of the enigma machine's state. Useful
+      // for logging, etc:
+      //
+      std::string army_str() const { return str(true); }
+      std::string navy_str() const { return str(false); }
+
    private:
       rotor_vector rotors;
       std::unique_ptr<rotor> reflector;
@@ -188,6 +194,8 @@ namespace enigma
 
          return pb.signal(pos);
       }
+
+      std::string str(bool army) const;
    };
 }
 

@@ -31,6 +31,24 @@ public:
       TS_ASSERT_THROWS(m.set_display("BCD"), enigma_machine_error);
       TS_ASSERT_THROWS_NOTHING(m.set_display("ABCD"));
    }
+
+   void test_navy_str()
+   {
+      const std::string stecker = "1/20 2/12 4/6 7/10 8/13 14/23 15/16 17/25 18/26 22/24";
+      enigma_machine machine({"Beta", "II", "IV", "I"}, {0, 0, 0, 21}, "B-Thin", stecker);
+
+      TS_ASSERT_EQUALS(machine.navy_str(), "B-Thin Beta/0 II/0 IV/0 I/21 AAAA "
+               "1/20 2/12 4/6 7/10 8/13 14/23 15/16 17/25 18/26 22/24");
+   }
+
+   void test_army_str()
+   {
+      enigma_machine machine({"II", "IV", "V"}, {1, 20, 11}, "B",
+               "AV BS CG DL FU HZ IN KM OW RX");
+
+      TS_ASSERT_EQUALS(machine.army_str(), "B II/1 IV/20 V/11 AAA "
+               "AV BS CG DL FU HZ IN KM OW RX");
+   }
 };
 
 class stepping_test_suite : public CxxTest::TestSuite
