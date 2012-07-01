@@ -123,6 +123,16 @@ namespace enigma
          return result;
       }
 
+      // Process a buffer of pre-processed text of length n, placing the result in an output buffer.
+      void process_data(const char* input, char* output, std::size_t n)
+      {
+         for (std::size_t i = 0; i < n; ++i)
+         {
+            step_rotors();
+            *output++ = electric_signal(*input++) + 'A';
+         }
+      }
+
       // for access to the plugboard for hill-climbing, etc
       plugboard& get_plugboard() { return pb; }
 

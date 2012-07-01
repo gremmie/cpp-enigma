@@ -22,6 +22,9 @@ namespace enigma
 
    // Removes spaces from a string and returns the resulting string:
    std::string remove_spaces(const std::string& s);
+
+   // Removes spaces & converts to signal numbers:
+   std::string preprocess_ciphertext(const std::string& s);
 }
 
 #endif
