@@ -20,3 +20,20 @@ std::string enigma::remove_spaces(const std::string& s)
    }
    return result;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+std::string enigma::preprocess_ciphertext(const std::string& s)
+{
+   std::string result;
+   result.reserve(s.size());
+
+   for (const auto& c : s)
+   {
+      if (c != ' ')
+      {
+         result += c - 'A';
+      }
+   }
+   return result;
+}
