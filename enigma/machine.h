@@ -47,22 +47,22 @@ namespace enigma
       // set the rotor display (starting position) - 3 rotor version
       void set_display(char left, char mid, char right)
       {
-         assert(rotors.size() == 3);
+         assert(rotors.size() == 4);
 
-         rotors[0]->set_display(left);
-         rotors[1]->set_display(mid);
-         rotors[2]->set_display(right);
+         rotors[1].set_display(left);
+         rotors[2].set_display(mid);
+         rotors[3].set_display(right);
       }
 
       // set the rotor display (starting position) - 4 rotor version
       void set_display(char c0, char c1, char c2, char c3)
       {
-         assert(rotors.size() == 4);
+         assert(rotors.size() == 5);
 
-         rotors[0]->set_display(c0);
-         rotors[1]->set_display(c1);
-         rotors[2]->set_display(c2);
-         rotors[3]->set_display(c3);
+         rotors[1].set_display(c0);
+         rotors[2].set_display(c1);
+         rotors[3].set_display(c2);
+         rotors[4].set_display(c3);
       }
 
       // Set the rotor display (starting position) using a string; the
@@ -70,11 +70,11 @@ namespace enigma
       // enigma_machine_error exception will be thrown:
       void set_display(const std::string& val)
       {
-         if (val.size() == 3 && rotors.size() == 3)
+         if (val.size() == 3 && rotors.size() == 4)
          {
             set_display(val[0], val[1], val[2]);
          }
-         else if (val.size() == 4 && rotors.size() == 4)
+         else if (val.size() == 4 && rotors.size() == 5)
          {
             set_display(val[0], val[1], val[2], val[3]);
          }
@@ -88,9 +88,9 @@ namespace enigma
       std::string get_display() const
       {
          std::string result;
-         for (const auto& r : rotors)
+         for (std::size_t i = 1; i < rotors.size(); ++i)
          {
-            result += r->get_display();
+            result += rotors[i].get_display();
          }
          return result;
       }
@@ -143,8 +143,9 @@ namespace enigma
       std::string navy_str() const { return str(false); }
 
    private:
-      rotor_vector rotors;
-      std::shared_ptr<rotor> reflector;
+      // Note that to improve cache performance, the rotors and reflectors are stored
+      // in a contiguous vector.
+      std::vector<rotor> rotors;    // rotor & reflector array
       plugboard pb;
       rotor* r_rotor;      // rightmost rotor
       rotor* m_rotor;      // 2nd to right rotor
@@ -188,21 +189,31 @@ namespace enigma
       // Returns a lamp number to light (an integer 0-25).
       int electric_signal(int signal_num)
       {
-         int pos = pb.signal(signal_num);
+         int n = pb.signal(signal_num);
 
-         for (auto r = rotors.rbegin(); r != rotors.rend(); ++r)
+         if (rotors.size() == 4)    // 3 rotors + reflector
          {
-            pos = (*r)->signal_in(pos);
+            n = rotors[3].signal_in(n);
+            n = rotors[2].signal_in(n);
+            n = rotors[1].signal_in(n);
+            n = rotors[0].signal_in(n);   // reflector
+            n = rotors[1].signal_out(n);
+            n = rotors[2].signal_out(n);
+            n = rotors[3].signal_out(n);
          }
-
-         pos = reflector->signal_in(pos);
-
-         for (const auto& r : rotors)
+         else  // Kriegsmarine 4 rotor + reflector
          {
-            pos = r->signal_out(pos);
+            n = rotors[4].signal_in(n);
+            n = rotors[3].signal_in(n);
+            n = rotors[2].signal_in(n);
+            n = rotors[1].signal_in(n);
+            n = rotors[0].signal_in(n);   // reflector
+            n = rotors[1].signal_out(n);
+            n = rotors[2].signal_out(n);
+            n = rotors[3].signal_out(n);
+            n = rotors[4].signal_out(n);
          }
-
-         return pb.signal(pos);
+         return pb.signal(n);
       }
 
       std::string str(bool army) const;

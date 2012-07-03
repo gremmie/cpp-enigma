@@ -143,7 +143,7 @@ public:
    void test_get_wiring()
    {
       plugboard pb;
-      alpha_int_array w(pb.get_wiring());
+      auto w(pb.get_wiring());
 
       for (int i = 0; i < 26; ++i)
       {
@@ -161,7 +161,7 @@ public:
       std::swap(w[8], w[20]);
       std::swap(w[24], w[25]);
 
-      alpha_int_array w1(pb.get_wiring());
+      auto w1(pb.get_wiring());
       for (int i = 0; i < 26; ++i)
       {
          TS_ASSERT_EQUALS(w[i], w1[i]);
@@ -182,7 +182,7 @@ public:
       plugboard pb;
       pb.set_wiring(w);
 
-      alpha_int_array w2 = pb.get_wiring();
+      auto w2 = pb.get_wiring();
       TS_ASSERT_EQUALS(w, w2);
    }
 
