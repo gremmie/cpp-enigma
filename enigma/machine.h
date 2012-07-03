@@ -16,7 +16,7 @@
 
 namespace enigma
 {
-   typedef std::vector<std::shared_ptr<rotor>> rotor_vector;
+   typedef std::vector<rotor*> rotor_vector;
 
    class enigma_machine_error : public enigma_error
    {
@@ -29,14 +29,16 @@ namespace enigma
    class enigma_machine
    {
    public:
-      // construct an Enigma machine from component parts:
+      // Construct an Enigma machine from component parts.
+      // Note that the enigma_machine makes copies of the rotors and will not
+      // delete the rotor pointers:
       enigma_machine(const rotor_vector& rv,
-                     std::shared_ptr<rotor> reflector,
+                     const rotor& reflector,
                      const plugboard& pb);
 
       // construct an Enigma machine with a default plugboard (no cables connected):
       enigma_machine(const rotor_vector& rv,
-                     std::shared_ptr<rotor> reflector);
+                     const rotor& reflector);
 
       // key-sheet style constructors:
       enigma_machine(const std::vector<std::string>& rotor_types,

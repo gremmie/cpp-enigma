@@ -16,12 +16,12 @@ using namespace enigma;
 
 enigma_machine::enigma_machine(
       const rotor_vector& rv,
-      std::shared_ptr<rotor> reflector,
+      const rotor& reflector,
       const plugboard& pb)
  : rotors(),
    pb(pb)
 {
-   rotors.push_back(*reflector);
+   rotors.push_back(reflector);
    for (const auto& r : rv)
    {
       rotors.push_back(*r);
@@ -33,11 +33,11 @@ enigma_machine::enigma_machine(
 
 enigma_machine::enigma_machine(
       const rotor_vector& rv,
-      std::shared_ptr<rotor> reflector)
+      const rotor& reflector)
  : rotors(),
    pb()
 {
-   rotors.push_back(*reflector);
+   rotors.push_back(reflector);
    for (const auto& r : rv)
    {
       rotors.push_back(*r);
