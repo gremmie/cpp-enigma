@@ -18,10 +18,14 @@ enigma_machine::enigma_machine(
       const rotor_vector& rv,
       std::shared_ptr<rotor> reflector,
       const plugboard& pb)
- : rotors(rv),
-   reflector(reflector),
+ : rotors(),
    pb(pb)
 {
+   rotors.push_back(*reflector);
+   for (const auto& r : rv)
+   {
+      rotors.push_back(*r);
+   }
    rotor_count_check();
 }
 
@@ -30,10 +34,14 @@ enigma_machine::enigma_machine(
 enigma_machine::enigma_machine(
       const rotor_vector& rv,
       std::shared_ptr<rotor> reflector)
- : rotors(rv),
-   reflector(reflector),
+ : rotors(),
    pb()
 {
+   rotors.push_back(*reflector);
+   for (const auto& r : rv)
+   {
+      rotors.push_back(*r);
+   }
    rotor_count_check();
 }
 
@@ -45,26 +53,28 @@ enigma_machine::enigma_machine(
       const std::string& reflector_name,
       const std::string& plugboard_settings)
  : rotors(),
-   reflector(create_reflector(reflector_name.c_str())),
    pb(plugboard_settings)
 {
+   const auto ukw(create_reflector(reflector_name.c_str()));
+   rotors.push_back(*ukw);
    for (const auto& name : rotor_types)
    {
-      rotors.push_back(create_rotor(name.c_str()));
+      const auto r(create_rotor(name.c_str()));
+      rotors.push_back(*r);
    }
    rotor_count_check();
 
    // if ring settings are supplied, there has to be one for each rotor
    if (!ring_settings.empty())
    {
-      if (rotors.size() != ring_settings.size())
+      if (rotors.size() - 1 != ring_settings.size())
       {
          throw enigma_machine_error("rotor/ring setting count mismatch");
       }
 
-      for (std::size_t i = 0; i < rotors.size(); ++i)
+      for (std::size_t i = 1; i < rotors.size(); ++i)
       {
-         rotors[i]->set_ring_setting(ring_settings[i]);
+         rotors[i].set_ring_setting(ring_settings[i - 1]);
       }
    }
 }
@@ -73,22 +83,24 @@ enigma_machine::enigma_machine(
 
 void enigma_machine::rotor_count_check()
 {
-   if (rotors.size() != 3 && rotors.size() != 4)
+   // the first rotor is actually the reflector; so we should have a total
+   // of 4 or 5 rotors
+   if (rotors.size() != 4 && rotors.size() != 5)
    {
       throw enigma_machine_error("rotor count");
    }
 
-   if (rotors.size() == 3)
+   if (rotors.size() == 4)
    {
-      r_rotor = rotors[2].get();
-      m_rotor = rotors[1].get();
-      l_rotor = rotors[0].get();
+      r_rotor = &rotors[3];
+      m_rotor = &rotors[2];
+      l_rotor = &rotors[1];
    }
    else
    {
-      r_rotor = rotors[3].get();
-      m_rotor = rotors[2].get();
-      l_rotor = rotors[1].get();
+      r_rotor = &rotors[4];
+      m_rotor = &rotors[3];
+      l_rotor = &rotors[2];
    }
 }
 
@@ -98,11 +110,11 @@ std::string enigma_machine::str(bool army) const
 {
    std::ostringstream os;
 
-   os << reflector->name() << ' ';
+   os << rotors[0].name() << ' ';
 
-   for (const auto& r : rotors)
+   for (std::size_t i = 1; i < rotors.size(); ++i)
    {
-      os << r->name() << '/' << r->get_ring_setting() << ' ';
+      os << rotors[i].name() << '/' << rotors[i].get_ring_setting() << ' ';
    }
 
    os << get_display() << ' ' << (army ? pb.army_str() : pb.navy_str());
