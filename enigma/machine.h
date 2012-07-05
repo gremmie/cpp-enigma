@@ -104,6 +104,13 @@ namespace enigma
          return electric_signal(c - 'A') + 'A';
       }
 
+      // this is like key_press(), but it works in signal numbers (0-25) instead of chars:
+      int step(int n)
+      {
+         step_rotors();
+         return electric_signal(n);
+      }
+
       // Process a buffer of text of length n, placing the result in an output buffer.
       void process_text(const char* input, char* output, std::size_t n)
       {
