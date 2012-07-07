@@ -253,3 +253,62 @@ public:
    }
 
 };
+
+class ring_settings_test_suite : public CxxTest::TestSuite
+{
+public:
+
+   void test_ring_settings()
+   {
+      enigma_machine machine({"Beta", "II", "IV", "I"}, {0, 2, 8, 21}, "B-Thin");
+
+      TS_ASSERT_EQUALS(machine.get_ring_setting(0), 0);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(1), 2);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(2), 8);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(3), 21);
+
+      std::vector<int> rings(machine.get_ring_settings());
+      std::vector<int> expected{ 0, 2, 8, 21 };
+      TS_ASSERT_EQUALS(rings, expected);
+
+      machine.set_ring_setting(0, 25);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(0), 25);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(1), 2);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(2), 8);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(3), 21);
+
+      expected = { 25, 2, 8, 21 };
+      TS_ASSERT_EQUALS(machine.get_ring_settings(), expected);
+
+      machine.set_ring_setting(1, 18);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(0), 25);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(1), 18);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(2), 8);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(3), 21);
+
+      expected = { 25, 18, 8, 21 };
+      TS_ASSERT_EQUALS(machine.get_ring_settings(), expected);
+
+      machine.set_ring_setting(2, 11);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(0), 25);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(1), 18);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(2), 11);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(3), 21);
+
+      expected = { 25, 18, 11, 21 };
+      TS_ASSERT_EQUALS(machine.get_ring_settings(), expected);
+
+      machine.set_ring_setting(3, 3);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(0), 25);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(1), 18);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(2), 11);
+      TS_ASSERT_EQUALS(machine.get_ring_setting(3), 3);
+
+      expected = { 25, 18, 11, 3 };
+      TS_ASSERT_EQUALS(machine.get_ring_settings(), expected);
+
+      expected = { 8, 9, 10, 11 };
+      machine.set_ring_settings(expected);
+      TS_ASSERT_EQUALS(machine.get_ring_settings(), expected);
+   }
+};
