@@ -200,8 +200,7 @@ namespace enigma
       {
          for (std::size_t i = 0; i < n; ++i)
          {
-            step_rotors();
-            *output++ = electric_signal(*input++) + 'A';
+            *output++ = step(*input++) + 'A';
          }
       }
 
