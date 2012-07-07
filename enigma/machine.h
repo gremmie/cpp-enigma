@@ -6,10 +6,12 @@
 //
 // machine.h - This file contains the main Enigma machine class.
 
+#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
 #include <cassert>
+#include <cstddef>
 #include "enigma_types.h"
 #include "rotor.h"
 #include "plugboard.h"
@@ -97,6 +99,66 @@ namespace enigma
          return result;
       }
 
+      // Returns the number of rotors in the machine (this count does not include
+      // the reflector).
+      std::size_t num_rotors() const
+      {
+         return rotors.size() - 1;
+      }
+
+      // For changing the ring setting on a rotor inside the machine.
+      // Parameters:
+      //    rotor - identifies the rotor to change the ring setting; must be
+      //            in the range 0 - (num_rotors() - 1). 0 is the leftmost rotor.
+      //    ring_setting - the ring setting value, 0-25
+      //
+      void set_ring_setting(int rotor, int ring_setting)
+      {
+         rotors[rotor + 1].set_ring_setting(ring_setting);
+      }
+
+      // For getting the ring setting on a rotor inside the machine.
+      // Parameters:
+      //    rotor - identifies the rotor to change the ring setting; must be
+      //            in the range 0 - (num_rotors() - 1). 0 is the leftmost rotor.
+      //
+      int get_ring_setting(int rotor) const
+      {
+         return rotors[rotor + 1].get_ring_setting();
+      }
+
+      // For changing the ring settings on all rotors inside the machine.
+      // Parameters:
+      //    settings - a vector of ring settings, 0-25. The size of this
+      //               vector must match num_rotors().
+      //
+      void set_ring_settings(const std::vector<int>& settings)
+      {
+         if (settings.size() == num_rotors())
+         {
+            rotor* r = &rotors[1];  // skip the reflector;
+            for (auto s : settings)
+            {
+               r->set_ring_setting(s);
+               ++r;
+            }
+         }
+         else
+         {
+            throw enigma_machine_error("set_ring_settings rotor/settings size mismatch");
+         }
+      }
+
+      // For getting the ring settings as a vector of integers. Element 0 corresponds
+      // to the leftmost rotor.
+      std::vector<int> get_ring_settings() const
+      {
+         std::vector<int> result(num_rotors());
+         std::transform(rotors.begin() + 1, rotors.end(), result.begin(),
+               [](const rotor& r) { return r.get_ring_setting(); });
+         return result;
+      }
+
       // simulate front panel key press; returns the lamp character that is lit
       char key_press(char c)
       {
@@ -120,6 +182,7 @@ namespace enigma
          }
       }
 
+      // Process a buffer of text from a string, returning the result as a string.
       std::string process_text(const std::string& input)
       {
          std::string result;
