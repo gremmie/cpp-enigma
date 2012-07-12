@@ -11,3 +11,4 @@ sources = Split("""
 env.StaticLibrary('enigma', sources)
 
 SConscript(['tests/SConscript'], exports='env', variant_dir='build', duplicate=0)
+SConscript(['examples/SConscript'], exports='env', variant_dir='build/examples', duplicate=0)
