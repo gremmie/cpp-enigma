@@ -109,6 +109,7 @@ the unit tests with::
 I have not currently compiled the code on other compilers or environments.
 Patches or pull requests are welcome.
 
+
 Documentation
 -------------
 
@@ -124,6 +125,10 @@ the Py-Enigma README file below:
 
    Sources for the documentation are also included in Sphinx_ format. If you
    install Sphinx you can generate the documentation in several output formats.
+
+Between the Python docs and the source code hopefully this will be enough to get
+you going. Proper documentation may be created in the future. Again, patches and
+pull requests are welcome.
 
 
 Support
